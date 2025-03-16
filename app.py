@@ -1,15 +1,24 @@
 from fastapi import FastAPI, HTTPException
+from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 from gradio_client import Client
 
 app = FastAPI()
 
-# Define the request model
+# Enable CORS
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],  # Allow all origins, change to specific domain in production
+    allow_credentials=True,
+    allow_methods=["*"],  # Allow all methods (GET, POST, etc.)
+    allow_headers=["*"],  # Allow all headers
+)
+
+# Define request and response models
 class PredictionRequest(BaseModel):
     input_text: str
     action: str
 
-# Define the response model
 class PredictionResponse(BaseModel):
     output_text: str
     output_audio: dict
